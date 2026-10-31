@@ -63,6 +63,10 @@ import sites  # noqa: F401
 app = Flask(__name__)
 CORS(app)
 
+# Additive bounded chapter step; legacy /scrape and /scheduler routes remain intact.
+from core.automation import register_automation_routes
+register_automation_routes(app)
+
 
 # ==========================================
 # 🩺 فحص الصحة
