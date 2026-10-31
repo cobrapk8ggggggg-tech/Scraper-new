@@ -17,3 +17,10 @@ No new server process, queue loop, or daemon thread is launched by this route. O
 Use a **preview**, never replace the current production scraper automatically. Configure `NODE_BACKEND_URL` to target a suitable C-flow backend and preserve `API_SECRET`.
 
 See `tests/test_automation.py` and GitHub Actions. Some source plugins do not implement the generic catalog adapter and require separate support. Check terms/licences before scraping.
+
+## Updated durable storage contract
+The automation endpoint requires the matching C-floww backend revision with
+`/api/automation/chapters/check` and `/api/automation/chapters/import`.
+Set NODE_BACKEND_URL to isolated staging and provision its named Firestore database.
+Legacy endpoints remain available, but automation never falls back to their old
+acknowledgement semantics. See ENGINEERING_AUDIT_AR.md for tested scope and blockers.

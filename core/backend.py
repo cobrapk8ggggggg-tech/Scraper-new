@@ -63,3 +63,14 @@ def push_log(message, log_type='info'):
                       headers=_headers(), timeout=15)
     except Exception as e:
         print(f"   (log push failed: {str(e)[:60]})")
+
+
+def automation_request(path, payload):
+    """Strict durable API: unavailable verification must never mean 'missing'."""
+    response = requests.post(f'{NODE_BACKEND_URL}/api/automation/chapters/{path}',
+                             json=payload, headers=_headers(), timeout=60)
+    response.raise_for_status()
+    data = response.json()
+    if not isinstance(data, dict) or data.get('ok') is not True:
+        raise RuntimeError('Backend did not verify durable persistence')
+    return data

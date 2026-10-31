@@ -8,7 +8,7 @@ from flask import request, jsonify
 
 from core.config import API_SECRET
 from core.registry import resolve_site
-from core.backend import send_data_to_backend, check_existing_chapters
+from core.backend import automation_request
 
 
 def allowed_source_url(source_url, site):
@@ -39,6 +39,12 @@ def scrape_one(source_url, chapter_number, admin_email='system@auto'):
     if not all(callable(fn) for fn in (fetch_meta, fetch_list, fetch_content)):
         raise ValueError('Source does not support per-chapter scraping')
 
+    # Check the durable receipt and actual storage before any source fetch.
+    identity = {'sourceUrl': source_url, 'chapterNumber': chapter_number}
+    existing = automation_request('check', identity)
+    if existing.get('persisted') is True:
+        return {'ok': True, 'status': 'already_exists', 'chapterNumber': chapter_number,
+                'receiptId': existing['receiptId']}
     metadata = fetch_meta(source_url)
     if not isinstance(metadata, dict) or not metadata.get('title'):
         raise ValueError('Source metadata unavailable')
@@ -49,24 +55,26 @@ def scrape_one(source_url, chapter_number, admin_email='system@auto'):
     if chapter is None:
         raise ValueError('Chapter number not found in source catalog')
     chapter_url = chapter.get('url')
-    if not isinstance(chapter_url, str) or not chapter_url:
-        raise ValueError('Chapter URL missing')
+    if not allowed_source_url(chapter_url, site):
+        raise ValueError('Unsafe chapter domain')
 
-    existing = check_existing_chapters(metadata['title'])
-    if chapter_number in existing:
-        return {'ok': True, 'status': 'already_exists', 'chapterNumber': chapter_number}
     content = fetch_content(chapter_url)
     if not isinstance(content, str) or not content.strip():
         raise ValueError('No chapter content available')
 
-    payload = {'adminEmail': admin_email, 'novelData': metadata,
-               'chapters': [{'number': chapter_number,
-                             'title': str(chapter.get('title') or f'Chapter {chapter_number}'),
-                             'content': content}],
-               'skipMetadataUpdate': bool(existing)}
-    if not send_data_to_backend(payload):
+    result = automation_request('import', {'sourceUrl': source_url, 'novelData': metadata,
+        'chapter': {'number': chapter_number,
+                    'title': str(chapter.get('title') or f'Chapter {chapter_number}'),
+                    'content': content}})
+    if result.get('persisted') is not True or result.get('chapterNumber') != chapter_number:
         raise RuntimeError('C-flow did not confirm chapter persistence')
-    return {'ok': True, 'status': 'saved', 'chapterNumber': chapter_number}
+    # A separate read request proves retry/idempotency visibility.
+    verified = automation_request('check', identity)
+    if verified.get('persisted') is not True or verified.get('receiptId') != result.get('receiptId'):
+        raise RuntimeError('C-flow chapter readback failed')
+    return {'ok': True, 'status': 'saved', 'chapterNumber': chapter_number,
+            'receiptId': result['receiptId']}
+
 
 
 def register_automation_routes(app):
