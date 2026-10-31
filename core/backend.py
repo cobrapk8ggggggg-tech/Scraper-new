@@ -26,7 +26,12 @@ def send_data_to_backend(payload):
     try:
         endpoint = f"{NODE_BACKEND_URL}/api/scraper/receive"
         response = requests.post(endpoint, json=payload, headers=_headers(), timeout=60)
-        return response.status_code == 200
+        if response.status_code != 200:
+            return False
+        try:
+            return response.json().get('success') is True
+        except (TypeError, ValueError, AttributeError):
+            return False
     except Exception as e:
         print(f"❌ Failed to send data: {e}")
         return False
