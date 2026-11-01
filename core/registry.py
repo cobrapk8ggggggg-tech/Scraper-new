@@ -56,6 +56,7 @@ def get_registry():
             'language': s['language'],
             'status': s['status'],
             'notes': s['notes'],
+            'automation': {'perChapter': s['status'] == 'active' and all(callable(s.get(k)) for k in ('fetch_metadata', 'fetch_chapters', 'fetch_content')), 'catalogMode': 'snapshot'},
         }
         for s in SITE_REGISTRY
     ]

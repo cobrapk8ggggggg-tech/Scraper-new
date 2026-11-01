@@ -1,3 +1,5 @@
+> التنفيذ الأحدث وإعداداته وحدوده في [DURABLE_RUNTIME_AR.md](DURABLE_RUNTIME_AR.md).
+
 # Bounded ZEUS Scraper Jobs
 
 This branch imports the original ZEUS Python Flask scraper and adds an **opt-in**, synchronous one-chapter route.

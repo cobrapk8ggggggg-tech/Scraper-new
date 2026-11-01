@@ -59,3 +59,6 @@ SCHEDULER_CONFIG = {
     'status': 'idle',
     'admin_email': 'system@auto'
 }
+
+# Private credential for new durable endpoints; the original API_SECRET is unchanged.
+AUTOMATION_INGEST_SECRET = os.environ.get('AUTOMATION_INGEST_SECRET', '')

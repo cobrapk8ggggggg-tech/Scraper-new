@@ -17,6 +17,7 @@ def load():
     sys.modules['core']=core
     config=types.ModuleType('core.config')
     config.API_SECRET='dummy'
+    config.AUTOMATION_INGEST_SECRET='dummy-ingest'
     registry=types.ModuleType('core.registry')
     registry.resolve_site=lambda _:None
     backend=types.ModuleType('core.backend')
@@ -57,7 +58,7 @@ class AutomationFoundationTests(unittest.TestCase):
         def backend(path, payload):
             if path == 'import':
                 saved.append(payload)
-            return {'ok':True, 'persisted':bool(saved), 'receiptId':'receipt', 'chapterNumber':4}
+            return {'ok':True, 'ready':path == 'catalog/save', 'persisted':bool(saved), 'receiptId':'receipt' if saved else None, 'chapterNumber':4}
         mod.automation_request=backend
         response=mod.scrape_one('https://novelfire.net/n',4)
         self.assertEqual(response['status'],'saved')
@@ -72,7 +73,7 @@ class AutomationFoundationTests(unittest.TestCase):
             'fetch_chapters':lambda _:[{'number':1,'url':'https://novelfire.net/1'}],
             'fetch_content':lambda _:'Text'}
         mod.automation_request=lambda path,_:({'ok':True,'persisted':True,'receiptId':'r','chapterNumber':1}
-            if path=='import' else {'ok':True,'persisted':False})
+            if path=='import' else {'ok':True,'persisted':False,'ready':path=='catalog/save'})
         with self.assertRaises(RuntimeError):
             mod.scrape_one('https://novelfire.net/n',1)
 
@@ -104,3 +105,22 @@ class AutomationFoundationTests(unittest.TestCase):
 
 if __name__=='__main__':
     unittest.main()
+
+class CatalogTests(unittest.TestCase):
+    def test_stored_catalog_does_not_refetch_metadata_or_full_index(self):
+        mod=load()
+        def forbidden(_):
+            self.fail('Cached catalog must be reused')
+        mod.resolve_site=lambda _:{'domains':['novelfire.net'],'status':'active',
+            'fetch_metadata':forbidden,'fetch_chapters':forbidden,'fetch_content':lambda _:'Source content'}
+        saved=[]
+        def backend(path,payload):
+            if path=='catalog/check':
+                return {'ok':True,'ready':True,'metadata':{'title':'Cached'},'chapter':{'number':1,'url':'https://novelfire.net/1'}}
+            if path=='import':
+                saved.append(payload)
+                return {'ok':True,'persisted':True,'receiptId':'receipt','chapterNumber':1}
+            return {'ok':True,'persisted':bool(saved),'receiptId':'receipt' if saved else None}
+        mod.automation_request=backend
+        self.assertEqual(mod.scrape_one('https://novelfire.net/n',1)['status'],'saved')
+        self.assertEqual(len(saved),1)

@@ -8,9 +8,11 @@
 - check_existing_chapters: منع تكرار الفصول الموجودة
 """
 
+import os
+from urllib.parse import urlsplit
 import requests
 
-from .config import API_SECRET, NODE_BACKEND_URL
+from .config import API_SECRET, NODE_BACKEND_URL, AUTOMATION_INGEST_SECRET
 
 
 def _headers():
@@ -18,6 +20,7 @@ def _headers():
         'Content-Type': 'application/json',
         'Authorization': API_SECRET,
         'x-api-secret': API_SECRET,
+        'x-automation-ingest-secret': AUTOMATION_INGEST_SECRET,
     }
 
 
@@ -67,7 +70,10 @@ def push_log(message, log_type='info'):
 
 def automation_request(path, payload):
     """Strict durable API: unavailable verification must never mean 'missing'."""
-    response = requests.post(f'{NODE_BACKEND_URL}/api/automation/chapters/{path}',
+    endpoint = f'{NODE_BACKEND_URL}/api/automation/{path}' if '/' in path else f'{NODE_BACKEND_URL}/api/automation/chapters/{path}'
+    if not os.environ.get('NODE_BACKEND_URL') or urlsplit(NODE_BACKEND_URL).scheme != 'https':
+        raise RuntimeError('Explicit isolated HTTPS backend is required')
+    response = requests.post(endpoint,
                              json=payload, headers=_headers(), timeout=60)
     response.raise_for_status()
     data = response.json()

@@ -13,5 +13,5 @@ jobs:
           python-version: '3.12'
       - run: python -m compileall -q core main.py sites
       - run: python -m pip install flask requests beautifulsoup4 lxml
-      - run: python -m unittest discover -s tests -p 'test_automation.py' -v
-      - run: python -m unittest discover -s tests -p 'test_http_automation.py' -v
+      - run: python -m unittest discover -s tests -v
+      - run: python -m compileall -q worker

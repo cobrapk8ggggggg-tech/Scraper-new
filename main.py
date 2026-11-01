@@ -521,7 +521,8 @@ def scheduler_loop():
 
 # بدء خيط الجدولة فوراً
 scheduler_thread = threading.Thread(target=scheduler_loop, daemon=True)
-scheduler_thread.start()
+if not __import__('os').environ.get('VERCEL') and __import__('os').environ.get('ZEUS_LEGACY_SCHEDULER') == 'true':
+    scheduler_thread.start()
 
 
 if __name__ == "__main__":
