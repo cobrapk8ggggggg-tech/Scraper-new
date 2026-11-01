@@ -1,0 +1,11 @@
+flask
+flask-cors
+requests
+curl_cffi
+beautifulsoup4
+lxml
+firebase-admin
+pymongo
+dnspython
+gunicorn
+cryptography

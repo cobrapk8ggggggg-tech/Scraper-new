@@ -1,0 +1,11 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "daemons": {
+    "scraper": {
+      "root": ".",
+      "entrypoint": "worker/Dockerfile",
+      "instances": {},
+      "terminationGracePeriodSeconds": 120
+    }
+  }
+}
