@@ -1,0 +1,335 @@
+[
+  {
+    "file": "sites/wtrlab.py",
+    "line": 528,
+    "domains": "['wtr-lab.com', 'www.wtr-lab.com']",
+    "metadata": "fetch_metadata_wtrlab",
+    "chapters": "fetch_chapter_list_wtrlab",
+    "content": "scrape_chapter_wtrlab",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1485,
+    "domains": "['novelfire.net']",
+    "metadata": "fetch_metadata_novelfire",
+    "chapters": "fetch_chapter_list_novelfire",
+    "content": "scrape_chapter_novelfire",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1497,
+    "domains": "['novelmtl.com']",
+    "metadata": "fetch_metadata_mtlnation",
+    "chapters": "fetch_chapter_list_mtlnation",
+    "content": "scrape_chapter_mtlnation",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1509,
+    "domains": "['fanmtl.com']",
+    "metadata": "fetch_metadata_fanmtl",
+    "chapters": "fetch_chapter_list_fanmtl",
+    "content": "scrape_chapter_fanmtl",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1521,
+    "domains": "['wuxiaworld.site']",
+    "metadata": "fetch_metadata_wuxiaworld",
+    "chapters": "lambda url: None",
+    "content": "None",
+    "content_args": null
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1533,
+    "domains": "['wuxiabox.com', 'wuxiaspot.com']",
+    "metadata": "fetch_metadata_wuxiabox",
+    "chapters": "fetch_chapter_list_wuxiabox",
+    "content": "scrape_chapter_wuxiabox",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1545,
+    "domains": "['freewebnovel.com']",
+    "metadata": "fetch_metadata_freewebnovel",
+    "chapters": "fetch_chapter_list_freewebnovel",
+    "content": "scrape_chapter_freewebnovel",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1557,
+    "domains": "['royalroad.com']",
+    "metadata": "fetch_metadata_royalroad",
+    "chapters": "fetch_chapter_list_royalroad",
+    "content": "scrape_chapter_royalroad",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1569,
+    "domains": "['scribblehub.com']",
+    "metadata": "fetch_metadata_scribblehub",
+    "chapters": "fetch_chapter_list_scribblehub",
+    "content": "scrape_chapter_scribblehub",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1581,
+    "domains": "['novelbin.net', 'novelbin.com']",
+    "metadata": "fetch_metadata_novelbin",
+    "chapters": "fetch_chapter_list_novelbin",
+    "content": "scrape_chapter_novelbin",
+    "content_args": 1
+  },
+  {
+    "file": "sites/english.py",
+    "line": 1593,
+    "domains": "['lnmtl.com']",
+    "metadata": "fetch_metadata_lnmtl",
+    "chapters": "fetch_chapter_list_lnmtl",
+    "content": "scrape_chapter_lnmtl",
+    "content_args": 1
+  },
+  {
+    "file": "sites/arabic.py",
+    "line": 220,
+    "domains": "['rewayat.club']",
+    "metadata": "fetch_metadata_rewayat",
+    "chapters": null,
+    "content": null,
+    "content_args": null
+  },
+  {
+    "file": "sites/arabic.py",
+    "line": 230,
+    "domains": "['ar-no.com']",
+    "metadata": "fetch_metadata_ar_novel",
+    "chapters": "lambda url: None",
+    "content": "None",
+    "content_args": null
+  },
+  {
+    "file": "sites/arabic.py",
+    "line": 242,
+    "domains": "['markazriwayat.com']",
+    "metadata": "fetch_metadata_markaz",
+    "chapters": "lambda url: None",
+    "content": "None",
+    "content_args": null
+  },
+  {
+    "file": "sites/cnextra.py",
+    "line": 1207,
+    "domains": "['tadu.com', 'www.tadu.com']",
+    "metadata": "fetch_metadata_tadu",
+    "chapters": "fetch_chapter_list_tadu",
+    "content": "scrape_chapter_tadu",
+    "content_args": 1
+  },
+  {
+    "file": "sites/cnextra.py",
+    "line": 1222,
+    "domains": "['bixiange.top', 'www.bixiange.top']",
+    "metadata": "_bixiange_meta",
+    "chapters": "_bixiange_chapters",
+    "content": "_bixiange_content",
+    "content_args": null
+  },
+  {
+    "file": "sites/cnextra.py",
+    "line": 1237,
+    "domains": "['ffxs8.com', 'www.ffxs8.com']",
+    "metadata": "_ffxs8_meta",
+    "chapters": "_ffxs8_chapters",
+    "content": "_ffxs8_content",
+    "content_args": null
+  },
+  {
+    "file": "sites/cnextra.py",
+    "line": 1252,
+    "domains": "['jpxs123.com', 'www.jpxs123.com']",
+    "metadata": "_jpxs_meta",
+    "chapters": "_jpxs_chapters",
+    "content": "_jpxs_content",
+    "content_args": null
+  },
+  {
+    "file": "sites/cnextra.py",
+    "line": 1267,
+    "domains": "['jhbook.taobao.com']",
+    "metadata": "fetch_metadata_jhbook",
+    "chapters": "fetch_chapter_list_jhbook",
+    "content": "scrape_chapter_jhbook",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1400,
+    "domains": "['quanben.io']",
+    "metadata": "fetch_metadata_quanben",
+    "chapters": "fetch_chapter_list_quanben",
+    "content": "scrape_chapter_quanben",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1412,
+    "domains": "['52shuku.net']",
+    "metadata": "fetch_metadata_52shuku",
+    "chapters": "fetch_chapter_list_52shuku",
+    "content": "scrape_chapter_52shuku",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1424,
+    "domains": "['erciyan.com', '2cyxsw.net']",
+    "metadata": "fetch_metadata_erciyuan",
+    "chapters": "fetch_chapter_list_erciyuan",
+    "content": "scrape_chapter_erciyuan",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1436,
+    "domains": "['69shu.xyz', '69shu.com', '69shuba.com', '69shuba.cx']",
+    "metadata": "fetch_metadata_69shu",
+    "chapters": "fetch_chapter_list_69shu",
+    "content": "scrape_chapter_69shu",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1448,
+    "domains": "['ixdzs8.com']",
+    "metadata": "fetch_metadata_ixdzs8",
+    "chapters": "fetch_chapter_list_ixdzs8",
+    "content": "scrape_chapter_ixdzs8",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1460,
+    "domains": "['linovel.net']",
+    "metadata": "fetch_metadata_linovel",
+    "chapters": "fetch_chapter_list_linovel",
+    "content": "scrape_chapter_linovel",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1472,
+    "domains": "['tw.linovelib.com', 'linovelib.com', 'bilinovel.com']",
+    "metadata": "fetch_metadata_linovelib_tw",
+    "chapters": "fetch_chapter_list_linovelib_tw",
+    "content": "scrape_chapter_linovelib_tw",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 1484,
+    "domains": "['novel543.com']",
+    "metadata": "fetch_metadata_novel543",
+    "chapters": "fetch_chapter_list_novel543",
+    "content": "scrape_chapter_novel543",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 2026,
+    "domains": "['twkan.com', 'twkan.cc']",
+    "metadata": "fetch_metadata_twkan",
+    "chapters": "fetch_chapter_list_twkan",
+    "content": "scrape_chapter_twkan",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 2548,
+    "domains": "['jwxs.org', 'www.jwxs.org']",
+    "metadata": "fetch_metadata_jwxs",
+    "chapters": "fetch_chapter_list_jwxs",
+    "content": "scrape_chapter_jwxs",
+    "content_args": 1
+  },
+  {
+    "file": "sites/chinese.py",
+    "line": 2836,
+    "domains": "['wfxs.tw', 'm.wfxs.tw', 'www.wfxs.tw']",
+    "metadata": "fetch_metadata_wfxs",
+    "chapters": "fetch_chapter_list_wfxs",
+    "content": "scrape_chapter_wfxs",
+    "content_args": 1
+  },
+  {
+    "file": "sites/korean.py",
+    "line": 253,
+    "domains": "AGITOON_DOMAINS",
+    "metadata": "fetch_metadata_agitoon",
+    "chapters": "fetch_chapter_list_agitoon",
+    "content": "scrape_chapter_agitoon",
+    "content_args": 1
+  },
+  {
+    "file": "sites/newcn.py",
+    "line": 966,
+    "domains": "['85novel.com', 'www.85novel.com']",
+    "metadata": "fetch_metadata_85novel",
+    "chapters": "fetch_chapter_list_85novel",
+    "content": "scrape_chapter_85novel",
+    "content_args": 1
+  },
+  {
+    "file": "sites/newcn.py",
+    "line": 982,
+    "domains": "['t.shuqi.com', 'shuqi.com', 'www.shuqi.com']",
+    "metadata": "fetch_metadata_shuqi",
+    "chapters": "fetch_chapter_list_shuqi",
+    "content": "scrape_chapter_shuqi",
+    "content_args": 1
+  },
+  {
+    "file": "sites/newcn.py",
+    "line": 999,
+    "domains": "['uuread.tw', 'www.uuread.tw', 'm.uuread.tw']",
+    "metadata": "fetch_metadata_uuread",
+    "chapters": "fetch_chapter_list_uuread",
+    "content": "scrape_chapter_uuread",
+    "content_args": 1
+  },
+  {
+    "file": "sites/tomatomtl.py",
+    "line": 959,
+    "domains": "['tomatomtl.com', 'www.tomatomtl.com']",
+    "metadata": "fetch_metadata_tomatomtl",
+    "chapters": "fetch_chapter_list_tomatomtl",
+    "content": "scrape_chapter_tomatomtl",
+    "content_args": 1
+  },
+  {
+    "file": "sites/faloo_xsw.py",
+    "line": 671,
+    "domains": "['faloo.com', 'wap.faloo.com', 'b.faloo.com']",
+    "metadata": "fetch_metadata_faloo",
+    "chapters": "fetch_chapter_list_faloo",
+    "content": "scrape_chapter_faloo",
+    "content_args": 1
+  },
+  {
+    "file": "sites/faloo_xsw.py",
+    "line": 687,
+    "domains": "['xsw.tw', 'm.xsw.tw', 'www.xsw.tw']",
+    "metadata": "fetch_metadata_xsw",
+    "chapters": "fetch_chapter_list_xsw",
+    "content": "scrape_chapter_xsw",
+    "content_args": 1
+  }
+]
