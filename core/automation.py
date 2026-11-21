@@ -30,23 +30,7 @@ def allowed_source_url(source_url, site):
     return False
 
 
-def scrape_one(source_url, chapter_number, admin_email='system@auto', job_id=None):
-    site = resolve_site(source_url)
-    if not site or not allowed_source_url(source_url, site):
-        raise ValueError('Unsupported or unsafe source domain')
-    # Check the durable receipt and actual storage before any source fetch.
-    identity = {'sourceUrl': source_url, 'chapterNumber': chapter_number}
-    existing = automation_request('check', identity)
-    if existing.get('persisted') is True:
-        return {'ok': True, 'status': 'already_exists', 'chapterNumber': chapter_number,
-                'receiptId': existing['receiptId']}
-    if existing.get('receiptId'):
-        recovered = automation_request('recover', identity)
-        verified = automation_request('check', identity)
-        if recovered.get('persisted') is not True or verified.get('persisted') is not True:
-            raise RuntimeError('Stored original reconciliation incomplete')
-        return {'ok': True, 'status': 'saved', 'chapterNumber': chapter_number,
-                'receiptId': recovered['receiptId']}
+def prepare_catalog(site, source_url, chapter_number, job_id):
     if site.get('status') != 'active':
         raise ValueError('Source is not active')
     fetch_meta, fetch_list, fetch_content = (
@@ -54,7 +38,7 @@ def scrape_one(source_url, chapter_number, admin_email='system@auto', job_id=Non
     if not all(callable(fn) for fn in (fetch_meta, fetch_list, fetch_content)):
         raise ValueError('Source does not support per-chapter scraping')
 
-    catalog_identity = {**identity, 'jobId': job_id or 'legacy'}
+    catalog_identity = {'sourceUrl': source_url, 'chapterNumber': chapter_number, 'jobId': job_id or 'legacy'}
     cached = automation_request('catalog/check', catalog_identity)
     if cached.get('ready') is True:
         metadata, chapter = cached.get('metadata'), cached.get('chapter')
@@ -75,6 +59,28 @@ def scrape_one(source_url, chapter_number, admin_email='system@auto', job_id=Non
         if saved_catalog.get('ready') is not True:
             raise RuntimeError('Source catalog persistence incomplete')
         chapter = next((c for c in valid if c['number'] == chapter_number), None)
+    return metadata, chapter
+
+
+def scrape_one(source_url, chapter_number, admin_email='system@auto', job_id=None):
+    site = resolve_site(source_url)
+    if not site or not allowed_source_url(source_url, site):
+        raise ValueError('Unsupported or unsafe source domain')
+    identity = {'sourceUrl': source_url, 'chapterNumber': chapter_number}
+    existing = automation_request('check', identity)
+    if existing.get('persisted') is True:
+        return {'ok': True, 'status': 'already_exists', 'chapterNumber': chapter_number,
+                'receiptId': existing['receiptId']}
+    if existing.get('receiptId'):
+        recovered = automation_request('recover', identity)
+        verified = automation_request('check', identity)
+        if recovered.get('persisted') is not True or verified.get('persisted') is not True:
+            raise RuntimeError('Stored original reconciliation incomplete')
+        return {'ok': True, 'status': 'saved', 'chapterNumber': chapter_number,
+                'receiptId': recovered['receiptId']}
+
+    metadata, chapter = prepare_catalog(site, source_url, chapter_number, job_id)
+    fetch_content = site['fetch_content']
     if not isinstance(chapter, dict):
         raise ValueError('Chapter number not found in source catalog')
     if not isinstance(metadata, dict) or not metadata.get('title'):
@@ -120,10 +126,20 @@ def register_automation_routes(app):
         body = request.get_json(silent=True)
         if not isinstance(body, dict):
             return jsonify({'error': 'JSON body required'}), 400
-        chapter_number = body.get('chapterNumber')
-        if type(chapter_number) is not int or not 1 <= chapter_number <= 1_000_000:
-            return jsonify({'error': 'Invalid chapterNumber'}), 400
         try:
+            if body.get('catalogOnly') is True:
+                import re
+                source_url, job_id = body.get('sourceUrl'), body.get('jobId')
+                if not isinstance(job_id, str) or not re.fullmatch(r'[a-f0-9]{24}', job_id):
+                    return jsonify({'error': 'Invalid jobId'}), 400
+                site = resolve_site(source_url)
+                if not site or not allowed_source_url(source_url, site):
+                    raise ValueError('Unsupported or unsafe source domain')
+                prepare_catalog(site, source_url, 1, job_id)
+                return jsonify({'ok': True, 'catalogReady': True}), 200
+            chapter_number = body.get('chapterNumber')
+            if type(chapter_number) is not int or not 1 <= chapter_number <= 1_000_000:
+                return jsonify({'error': 'Invalid chapterNumber'}), 400
             result = scrape_one(body.get('sourceUrl'), chapter_number,
                                 str(body.get('adminEmail') or 'system@auto')[:254], body.get('jobId'))
             return jsonify(result), 200

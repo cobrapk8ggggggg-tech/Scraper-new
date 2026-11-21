@@ -59,5 +59,19 @@ class HttpAutomationTest(unittest.TestCase):
         self.assertEqual(response.status_code,502)
         self.assertNotIn('ok',response.json)
 
+    def test_catalog_only_uses_the_same_private_endpoint_without_downloading_content(self):
+        headers = {'Authorization': os.environ['API_SECRET'],
+                   'x-automation-ingest-secret': os.environ['AUTOMATION_INGEST_SECRET']}
+        site = {'domains': ['novelfire.net']}
+        body = {'sourceUrl': 'https://novelfire.net/story', 'catalogOnly': True, 'jobId': 'a'*24}
+        with patch('core.automation.resolve_site', return_value=site), \
+             patch('core.automation.prepare_catalog') as prepare, \
+             patch('core.automation.scrape_one') as scrape:
+            response = self.client.post('/automation/scrape-chapter', headers=headers, json=body)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(response.json['catalogReady'])
+        prepare.assert_called_once_with(site, body['sourceUrl'], 1, body['jobId'])
+        scrape.assert_not_called()
+
 if __name__=='__main__':
     unittest.main()
