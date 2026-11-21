@@ -34,6 +34,13 @@ class HttpAutomationTest(unittest.TestCase):
         self.assertEqual(self.client.post('/automation/scrape-chapter',
             json={'sourceUrl':'https://novelfire.net/story','chapterNumber':True},headers=h).status_code,400)
 
+    def test_production_durable_endpoint_accepts_only_private_ingest_secret(self):
+        with patch.dict(os.environ, {'VERCEL_ENV': 'production', 'AUTOMATION_INGEST_ONLY': 'true'}):
+            self.assertEqual(self.client.post('/automation/scrape-chapter').status_code, 403)
+            response = self.client.post('/automation/scrape-chapter',
+                headers={'x-automation-ingest-secret': os.environ['AUTOMATION_INGEST_SECRET']})
+            self.assertEqual(response.status_code, 400)  # Authentication succeeded; JSON is required.
+
     def test_synchronous_step_acknowledgement(self):
         h={'Authorization':os.environ['API_SECRET'],'x-automation-ingest-secret':os.environ['AUTOMATION_INGEST_SECRET']}
         with patch('core.automation.scrape_one',

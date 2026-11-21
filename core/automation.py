@@ -3,6 +3,8 @@
 
 Preserves legacy API_SECRET and C-flow import endpoint. No daemon threads.
 """
+import hmac
+import os
 from urllib.parse import urlsplit
 from flask import request, jsonify
 
@@ -103,18 +105,16 @@ def scrape_one(source_url, chapter_number, admin_email='system@auto', job_id=Non
 def register_automation_routes(app):
     @app.route('/automation/health', methods=['GET'])
     def durable_health():
-        import os
         return jsonify({'protocol': 2, 'revision': os.environ.get('VERCEL_GIT_COMMIT_SHA', 'local'),
                         'ingestConfigured': bool(AUTOMATION_INGEST_SECRET)})
 
     @app.route('/automation/scrape-chapter', methods=['POST'])
     def scrape_chapter_step():
-        # Keep the exact existing API_SECRET; the feature never rotates it.
-        if request.headers.get('Authorization') != API_SECRET:
+        ingest_only = os.environ.get('VERCEL_ENV') == 'production' and os.environ.get('AUTOMATION_INGEST_ONLY') == 'true'
+        if not ingest_only and request.headers.get('Authorization') != API_SECRET:
             return jsonify({'error': 'Unauthorized'}), 401
         if not AUTOMATION_INGEST_SECRET:
             return jsonify({'error': 'Durable ingest is not configured'}), 503
-        import hmac
         if not hmac.compare_digest(request.headers.get('x-automation-ingest-secret', ''), AUTOMATION_INGEST_SECRET):
             return jsonify({'error': 'Unauthorized'}), 403
         body = request.get_json(silent=True)
